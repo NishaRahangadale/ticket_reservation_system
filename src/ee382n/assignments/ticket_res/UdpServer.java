@@ -17,16 +17,12 @@ public class UdpServer {
 		udpChannel.register(selector, SelectionKey.OP_READ);
 	}
 
-	public void handleClient() {
-	    try {           
-	    	byte[] request = new byte[1024];
-	    	byte[] response = new String("hello udp client!").getBytes();	    	
-	        SocketAddress clientAddress = udpChannel.receive(ByteBuffer.wrap(request));
-	        System.out.println(new String(request));
-	        udpChannel.send(ByteBuffer.wrap(response), clientAddress);	    
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+	public void handleClient() throws IOException {
+    	byte[] request = new byte[1024];
+    	byte[] response = new String("hello udp client!").getBytes();	    	
+        SocketAddress clientAddress = udpChannel.receive(ByteBuffer.wrap(request));
+        System.out.println(new String(request));
+        udpChannel.send(ByteBuffer.wrap(response), clientAddress);	    
 	}
 
 }

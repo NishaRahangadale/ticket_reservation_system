@@ -12,11 +12,8 @@ package ee382n.assignments.ticket_res;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
@@ -52,8 +49,6 @@ public class UdpTicketReservationClient {
 		try {
 			DatagramChannel clientChannel = DatagramChannel.open();
 			InetAddress ia = InetAddress.getByName(ipAddress);
-			//SocketAddress sa = new InetSocketAddress(ia, port);
-			//clientChannel.socket().bind(sa);
 			byte[] request = new String("hello udp server! ...I'm a udp client!").getBytes();
 			byte[] response = new byte[1024];
 			ByteBuffer requestBuffer = ByteBuffer.wrap(request);
