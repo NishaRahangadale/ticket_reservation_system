@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<serverConfigs>
+    <server id="aaron">
+        <capacity>100</capacity>
+        <port>8080</port>
+        <ipAddress>172.16.0.236</ipAddress>
+    </server>
+    <server id="arefin">
+        <capacity>1000</capacity>
+        <port>8082</port>
+        <ipAddress>127.0.0.1</ipAddress>
+    </server>
+    <server id="grader">
+        <capacity>100</capacity>
+        <port>8084</port>
+        <ipAddress>127.0.0.1</ipAddress>
+    </server>        
+</serverConfigs>
