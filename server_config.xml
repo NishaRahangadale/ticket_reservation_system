@@ -7,8 +7,8 @@
     </server>
     <server id="arefin">
         <capacity>1000</capacity>
-        <port>8082</port>
-        <ipAddress>127.0.0.1</ipAddress>
+        <port>8021</port>
+        <ipAddress>192.168.0.6</ipAddress>
     </server>
     <server id="grader">
         <capacity>100</capacity>
