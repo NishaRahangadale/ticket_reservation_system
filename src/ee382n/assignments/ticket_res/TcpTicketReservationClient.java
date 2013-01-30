@@ -53,7 +53,7 @@ public class TcpTicketReservationClient {
 		try {
 			InetAddress ia = InetAddress.getByName(ipAddress);
 			SocketChannel sc = SocketChannel.open(new InetSocketAddress(ia, port));
-			byte[] request = new String("hello tcp server! ...I'm a tcp client!").getBytes();
+			byte[] request = new String("reserve bill").getBytes();
 			byte[] response = new byte[1024];
 			ByteBuffer requestBuffer = ByteBuffer.wrap(request);
 			sc.write(requestBuffer);
