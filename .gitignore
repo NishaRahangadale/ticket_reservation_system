@@ -4,4 +4,3 @@ bin/
 *.jar
 *.war
 *.ear
-*.class
