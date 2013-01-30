@@ -49,7 +49,7 @@ public class UdpTicketReservationClient {
 		try {
 			DatagramChannel clientChannel = DatagramChannel.open();
 			InetAddress ia = InetAddress.getByName(ipAddress);
-			byte[] request = new String("hello udp server! ...I'm a udp client!").getBytes();
+			byte[] request = new String("reserve jill").getBytes();
 			byte[] response = new byte[1024];
 			ByteBuffer requestBuffer = ByteBuffer.wrap(request);
 			clientChannel.send(requestBuffer, new InetSocketAddress(ia, port));

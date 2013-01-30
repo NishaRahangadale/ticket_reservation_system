@@ -7,6 +7,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.Semaphore;
 
 public class TcpServer {
     static ServerSocketChannel tcpSocketChannel;
@@ -18,14 +19,20 @@ public class TcpServer {
 		tcpSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 	}
     
-	public void handleClient() throws IOException {
-		SocketChannel sc = tcpSocketChannel.accept();
+	public synchronized void handleClient() throws IOException {
 		byte[] request = new byte[1024];
-		byte[] response = new String("hello tcp client!").getBytes();
+		byte[] response;
 		
+		// Wait for the tcp request
+		SocketChannel sc = tcpSocketChannel.accept(); 
+		
+		// Capture the request 
 		if (sc != null) {
 			sc.read(ByteBuffer.wrap(request));
-			System.out.println(new String(request));
+			
+			// Execute the request, capture the response, and send back
+			String requestResponse = RequestHandler.handle(new String(request).trim().split(" "));
+			response = requestResponse.getBytes();
 			sc.write(ByteBuffer.wrap(response));
 		}
 	}

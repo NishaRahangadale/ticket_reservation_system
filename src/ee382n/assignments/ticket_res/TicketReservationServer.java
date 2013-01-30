@@ -31,7 +31,7 @@ import org.w3c.dom.NodeList;
 
 public class TicketReservationServer {
 	static int port;
-	static String capacity;
+	static int capacity;
 	static String ipAddress;
 
 	public static void main (String a[]) {
@@ -51,6 +51,9 @@ public class TicketReservationServer {
 		// Read in the appropriate server info
 		extractServerInfo(serverConfig);
 		
+		// Initialize the Ticket Reservation Database
+		TicketReservationDatabase.init(capacity);
+		
 		// Configure the server
 	    try {
 	    	InetAddress ia = InetAddress.getByName(ipAddress);
@@ -62,10 +65,7 @@ public class TicketReservationServer {
 	        
 	        // Create a new Udp Server
 	        UdpServer udpServer = new UdpServer(channelPort, selector);
-
-	        // Create an executor pool for handling client requests
-	        //ExecutorService es = Executors.newCachedThreadPool();
-
+	        
 	        System.out.println("Ticket server launched on port " + port);
 	        // Handle client connections
 	        while(true) { 
@@ -79,10 +79,8 @@ public class TicketReservationServer {
 	
 	                // Direct the request to the appropriate server based on the connect
 	                if (key.isAcceptable() && protocolChannel == TcpServer.tcpSocketChannel) {
-	                	//es.execute(tcpServer);
 	                	tcpServer.handleClient();
 	                } else if (key.isReadable() && protocolChannel == UdpServer.udpChannel) {
-	                    //es.execute(udpServer);
 	                	udpServer.handleClient();
 	                }
 	            }
@@ -112,7 +110,7 @@ public class TicketReservationServer {
 			
 			// Capturing info
 			port = Integer.parseInt(e.getElementsByTagName("port").item(0).getTextContent());
-			capacity = e.getElementsByTagName("capacity").item(0).getTextContent();
+			capacity = Integer.parseInt(e.getElementsByTagName("capacity").item(0).getTextContent());
 			ipAddress = e.getElementsByTagName("ipAddress").item(0).getTextContent();
 		} catch (Exception e) {
 			e.printStackTrace();

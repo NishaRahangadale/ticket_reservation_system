@@ -19,9 +19,14 @@ public class UdpServer {
 
 	public void handleClient() throws IOException {
     	byte[] request = new byte[1024];
-    	byte[] response = new String("hello udp client!").getBytes();	    	
+    	byte[] response;	    	
+    	
+    	// Capture the request
         SocketAddress clientAddress = udpChannel.receive(ByteBuffer.wrap(request));
-        System.out.println(new String(request));
+        
+        // Execute the request, capture the response, and send back
+        String requestResponse = RequestHandler.handle(new String(request).trim().split(" "));
+        response = requestResponse.getBytes();
         udpChannel.send(ByteBuffer.wrap(response), clientAddress);	    
 	}
 
