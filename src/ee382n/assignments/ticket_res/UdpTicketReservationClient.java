@@ -12,6 +12,7 @@ package ee382n.assignments.ticket_res;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -47,15 +48,49 @@ public class UdpTicketReservationClient {
 		
 		// Communicate with Udp Server
 		try {
-			DatagramChannel clientChannel = DatagramChannel.open();
-			InetAddress ia = InetAddress.getByName(ipAddress);
-			byte[] request = new String("reserve jill").getBytes();
-			byte[] response = new byte[1024];
-			ByteBuffer requestBuffer = ByteBuffer.wrap(request);
-			clientChannel.send(requestBuffer, new InetSocketAddress(ia, port));
-			clientChannel.receive(ByteBuffer.wrap(response));
-			System.out.println("From Udp Server: " + new String(response));
-			clientChannel.close();
+			
+			
+			//Arefin 1/30/13
+			System.out.println("Welcome to movie ticket reservation client.");
+			Scanner inputScanner = new Scanner(System.in);
+			
+			System.out.print("Enter Input: ");
+			
+			String userInput = inputScanner.nextLine();
+			
+			
+			while (userInput.toUpperCase().compareTo("QUIT") != 0)
+			{
+				TicketReservationClient ticket = new TicketReservationClient(userInput);
+				
+				if (ticket.checkUserInput())
+				{
+				
+					DatagramChannel clientChannel = DatagramChannel.open();
+					InetAddress ia = InetAddress.getByName(ipAddress);
+					byte[] request = new String(userInput).getBytes();
+					byte[] response = new byte[1024];
+					ByteBuffer requestBuffer = ByteBuffer.wrap(request);
+					clientChannel.send(requestBuffer, new InetSocketAddress(ia, port));
+					clientChannel.receive(ByteBuffer.wrap(response));
+					System.out.println("From Udp Server: " + new String(response));
+					clientChannel.close();
+					
+					System.out.print("Enter Input: ");
+				
+				}
+				else
+				{
+					System.out.print("Invalid Input, try again: ");
+				}
+				
+				userInput = inputScanner.nextLine();
+			}
+			
+			inputScanner.close();
+			
+			System.out.print("Good Bye!");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
