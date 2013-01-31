@@ -20,6 +20,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,17 +50,47 @@ public class TcpTicketReservationClient {
 		// Read in the appropriate server info
 		extractServerInfo(serverConfig);
 		
-		// Communicate with Udp Server
+		// Communicate with TCP Server
 		try {
-			InetAddress ia = InetAddress.getByName(ipAddress);
-			SocketChannel sc = SocketChannel.open(new InetSocketAddress(ia, port));
-			byte[] request = new String("reserve bill").getBytes();
-			byte[] response = new byte[1024];
-			ByteBuffer requestBuffer = ByteBuffer.wrap(request);
-			sc.write(requestBuffer);
-			sc.read(ByteBuffer.wrap(response));
-			System.out.println("From Tcp Server: " + new String(response));
-			sc.close();
+			
+			//Arefin 1/30/13
+			System.out.println("Welcome to movie ticket reservation client.");
+			Scanner inputScanner = new Scanner(System.in);
+			
+			System.out.print("Enter Input: ");
+			
+			String userInput = inputScanner.nextLine();
+			
+			
+			while (userInput.toUpperCase().compareTo("QUIT") != 0)
+			{
+				TicketReservationClient ticket = new TicketReservationClient(userInput);
+				
+				if (ticket.checkUserInput())
+				{
+					InetAddress ia = InetAddress.getByName(ipAddress);
+					SocketChannel sc = SocketChannel.open(new InetSocketAddress(ia, port));
+					byte[] request = new String(userInput).getBytes();
+					byte[] response = new byte[1024];
+					ByteBuffer requestBuffer = ByteBuffer.wrap(request);
+					sc.write(requestBuffer);
+					sc.read(ByteBuffer.wrap(response));
+					System.out.println("From Tcp Server: " + new String(response));
+					sc.close();System.out.print("Enter Input: ");
+					
+				}
+				else
+				{
+					System.out.print("Invalid Input, try again: ");
+				}
+				
+				userInput = inputScanner.nextLine();
+			}
+			
+			inputScanner.close();
+		
+			System.out.print("Good Bye!");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -37,7 +37,7 @@ public class TicketReservationClient {
 			//this.
 			name = null;
 			//this.
-			seatNum = 0;				
+			seatNum = -1;				
 			//System.out.println("Invalid Input, try again: ");
 		}
 		
