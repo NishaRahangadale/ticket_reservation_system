@@ -1,10 +1,10 @@
+package ee382n.assignments.ticket_res;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 //import org.junit.Before;
 //import org.junit.After;
 
-import ee382n.assignments.ticket_res.TicketReservationClient;
 
 
 public class TestTicketReservationClient {
