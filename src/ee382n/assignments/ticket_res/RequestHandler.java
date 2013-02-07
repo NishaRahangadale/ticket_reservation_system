@@ -1,3 +1,13 @@
+/**
+ * @file	RequestHandler.java
+ * 
+ * @author 	Aaron Alaniz (aaron.a.alaniz@gmail.com)
+ * 
+ * @author	Moshiul Arefin (marefin@globalintertech.com)
+ * 
+ * @brief	This class handles concurrent requests to interact with ticket reservation database.
+ */
+
 package ee382n.assignments.ticket_res;
 
 public class RequestHandler{
@@ -17,30 +27,24 @@ public class RequestHandler{
 			
 			case RESERVE:
 				System.out.println("Trying reservation for " + name + " on " + Thread.currentThread().getName());
-				
-				// Perform reservation
 				response = TicketReservationDatabase.reserve(name);
-				
 				break;
 				
 			case BOOK_SEAT:
 			case BOOKSEAT:
 				int seatNum = Integer.parseInt(commandBuffer[2]);
+				
 				System.out.println("Trying reservation for " + name + " in seat " + seatNum + " on " + Thread.currentThread().getName());				
-				
 				response = TicketReservationDatabase.bookSeat(name, seatNum);
-				
 				break;
 				
 			case SEARCH:
 				System.out.println("Searching reservations for " + name + " on " + Thread.currentThread().getName());
-				
 				response = TicketReservationDatabase.search(name);
 				break;
 				
 			case DELETE:
 				System.out.println("Deleting Reservations for " + name + " on " + Thread.currentThread().getName());
-				
 				response = TicketReservationDatabase.delete(name);
 				break;
 				
@@ -53,5 +57,4 @@ public class RequestHandler{
 		}
 		return response;
 	}
-
 }

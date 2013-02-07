@@ -1,13 +1,15 @@
 /**
+ * @file	TicketReservationClient.java
  * 
+ * @author 	Aaron Alaniz (aaron.a.alaniz@gmail.com)
+ * 
+ * @author	Moshiul Arefin (marefin@globalintertech.com)
+ * 
+ * @brief	This serves as the general ticket reservation client.
  */
+
 package ee382n.assignments.ticket_res;
 
-/**
- * @author Arefin
- * 
- *
- */
 import java.util.*;
 
 public class TicketReservationClient {

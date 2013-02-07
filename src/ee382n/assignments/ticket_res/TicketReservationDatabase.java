@@ -1,3 +1,13 @@
+/**
+ * @file	TicketReservationDatabase.java
+ * 
+ * @author 	Aaron Alaniz (aaron.a.alaniz@gmail.com)
+ * 
+ * @author	Moshiul Arefin (marefin@globalintertech.com)
+ * 
+ * @brief	This database handles all transactions on the ticket reservation system.
+ */
+
 package ee382n.assignments.ticket_res;
 
 import java.util.HashMap;

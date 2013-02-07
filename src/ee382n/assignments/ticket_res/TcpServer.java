@@ -1,3 +1,13 @@
+/**
+ * @file	TcpServer.java
+ * 
+ * @author 	Aaron Alaniz (aaron.a.alaniz@gmail.com)
+ * 
+ * @author	Moshiul Arefin (marefin@globalintertech.com)
+ * 
+ * @brief	This class serves as the TCP server for the ticket reservation system.
+ */
+
 package ee382n.assignments.ticket_res;
 
 import java.io.IOException;

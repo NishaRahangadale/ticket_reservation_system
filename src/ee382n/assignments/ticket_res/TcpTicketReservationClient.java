@@ -36,6 +36,7 @@ public class TcpTicketReservationClient {
 	
 	public static void main (String a[]) {
 		String serverConfig;
+		
 		// Verify that user has passed in a proper server configuration
 		if (a.length < 1) {
 			System.out.println("Server configuration id not specified. Please enter aaron, arefin, or grader as argument");
