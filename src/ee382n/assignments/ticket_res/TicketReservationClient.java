@@ -22,8 +22,10 @@ public class TicketReservationClient {
 		
 		try
 		{
-			String delimeters  = "[ <>]";
-			String[] userInputArray = userInput.split(delimeters);
+			String delimeters  = "[ ]";
+			//remove < > chars
+			
+			String[] userInputArray = userInput.replaceAll("[<>]", "").split(delimeters);
 			
 			//this.
 			call = userInputArray.length >= 1 ? userInputArray[0].toUpperCase() : null;
