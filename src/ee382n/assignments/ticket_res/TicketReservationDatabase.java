@@ -44,6 +44,7 @@ public class TicketReservationDatabase {
 	
 	public static String bookSeat(String name, int seatNum) {
 		String response = "";
+		String serverLog = null;
 		
 		if (hasReservation(name)) {
 			response = name + " all ready has reservation on " + search(name);
@@ -51,50 +52,67 @@ public class TicketReservationDatabase {
 			reservations.put(name, seatNum);
 			availableSeats.remove(new Integer(seatNum));
 			response = "Seat assigned to you is " + seatNum;
+			serverLog = "Seat " + seatNum + " assigned to " + name;
 		} else {
 			response = seatNum + " is not available";
+			serverLog = seatNum + " is not available for " + name;
 		}
+		System.out.println((serverLog == null) ? (response) : (serverLog));
 		
 		return response;
 	}
 	
 	public static String reserve(String name) {
 		String response = "";
+		String serverLog = null;
 		
 		if (availableSeats.isEmpty()) {
 			response = "Sold out - No seat available";
+			serverLog = "Sold out - No seat available for " + name;
 		} else if (hasReservation(name)) {
 			response = "Seat already booked against the name provided";
+			serverLog = "Seat already booked for " + name;
 		} else {
 			Integer seatNum = availableSeats.iterator().next();
 			response = "Seat assigned to you is " + seatNum;
+			serverLog = "Seat assigned to " + name + " is " + seatNum; 
 			reservations.put(name, seatNum);
 			availableSeats.remove(new Integer(seatNum));
 		}
+		System.out.println((serverLog == null) ? (response) : (serverLog));
+		
 		return response;
 	}
 	
 	public static String search(String name) {
 		String response = "";
+		String serverLog = null;
 		
 		if (reservations.containsKey(name)) {
 			response = new String(reservations.get(name).toString());
+			serverLog = name + " has seat " + reservations.get(name).toString();
 		} else {
 			response = "No reservations found for " + name;
 		}
+		System.out.println((serverLog == null) ? (response) : (serverLog));
+		
 		return response;
 	}
 	
 	public static String delete(String name) {
 		String response = "";
+		String serverLog = null;
 		
 		if (hasReservation(name)) {
 			response = new String(reservations.get(name).toString());
+			serverLog = "deleted seat " + reservations.get(name).toString() + " for " + name;
 			availableSeats.add(new Integer(search(name)));
 			reservations.remove(name);
 		} else {
 			response = "No reservations found for " + name;
 		}
+		System.out.println((serverLog == null) ? (response) : (serverLog));
+		
 		return response;
 	}
 }

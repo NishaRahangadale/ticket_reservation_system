@@ -3,7 +3,7 @@
     <server id="aaron">
         <capacity>100</capacity>
         <port>8080</port>
-        <ipAddress>192.168.1.4</ipAddress>
+        <ipAddress>192.168.1.5</ipAddress>
     </server>
     <server id="arefin">
         <capacity>1000</capacity>
