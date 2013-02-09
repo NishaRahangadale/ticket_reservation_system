@@ -11,7 +11,7 @@ The following directory contains all source needed for assignment 1. Please exec
 
 Compiling
 ---------
-javac *
+javac *.java
 
 Starting the Server
 -------------------
