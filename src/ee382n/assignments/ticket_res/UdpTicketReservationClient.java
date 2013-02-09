@@ -73,7 +73,7 @@ public class UdpTicketReservationClient {
 					ByteBuffer requestBuffer = ByteBuffer.wrap(request);
 					clientChannel.send(requestBuffer, new InetSocketAddress(ia, port));
 					clientChannel.receive(ByteBuffer.wrap(response));
-					System.out.println("From Udp Server: " + new String(response));
+					System.out.println(new String(response));
 					clientChannel.close();
 					
 					System.out.print("Enter Input: ");

@@ -76,7 +76,7 @@ public class TcpTicketReservationClient {
 					ByteBuffer requestBuffer = ByteBuffer.wrap(request);
 					sc.write(requestBuffer);
 					sc.read(ByteBuffer.wrap(response));
-					System.out.println("From Tcp Server: " + new String(response));
+					System.out.println(new String(response));
 					sc.close();System.out.print("Enter Input: ");
 					
 				}
