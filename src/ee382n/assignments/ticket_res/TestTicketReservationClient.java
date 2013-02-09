@@ -7,9 +7,16 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -18,31 +25,50 @@ import org.junit.After;
 
 public class TestTicketReservationClient {
 	private ExecutorService threadPool;
+	private Semaphore semaphore;
+	private String[] names;
+	List<Future<Boolean>> futures;
+	HashMap<String, Integer> seatMap;
 	
 	@Before
 	public void setUp() {
 		threadPool = Executors.newCachedThreadPool();
+		semaphore = new Semaphore(1);
+		futures = new ArrayList<Future<Boolean>>(10);
+		seatMap = new HashMap<String, Integer>();
+		names = new String[] {"aaron", "jack", "jill", "phil", "mac", "denis", "gleb", "carlos", "david" };
+		
+		// Initialize seat map
+		for (int i = 0 ; i < 9 ; i++) {
+			seatMap.put(names[i], null);
+		}
 	}
 	
 	@Test
-	public void concTest() {
+	public void concTest() throws InterruptedException, ExecutionException {
 		
 		for (int i = 0 ; i < 100 ; i++) {
-			for (int j = 0 ; j < 10 ; j++) {
-				threadPool.execute(new clientThread());
+			
+			for(int j = 0; j < 10; j++) {
+				futures.add((Future<Boolean>) threadPool.submit(new ClientThread()));
+				
+				for (Future<Boolean> future : futures){
+					Boolean result = true;
+					future.get();
+					assertTrue(result.booleanValue());
+				}
 			}
 		}
-		assertTrue(true);
 	}
 	
-	private class clientThread implements Runnable {
+	private class ClientThread implements Callable {
 		int size;
 		String[] commands;
 		String[] names;
 		boolean udpClient;
 		Random rand;
 
-		public clientThread() {
+		public ClientThread() {
 			size = 100;
 			commands = new String[] { "reserve", "bookSeat", "search", "delete" };
 			names = new String[] {"aaron", "jack", "jill", "phil", "mac", "denis", "gleb", "carlos", "david" };
@@ -51,11 +77,14 @@ public class TestTicketReservationClient {
 		}
 
 		@Override
-		public void run() {
+		public Object call() {
 			String command = commands[Math.abs(rand.nextInt()) % commands.length];
 			String name = names[Math.abs(rand.nextInt()) % names.length];
 			String clientRequest;
+			String serverResponse = null;
 			Integer num = null;
+			Boolean result = false;
+			Integer seat;
 			
 			if (command.equals("bookSeat")) {
 				num = new Integer(Math.abs(rand.nextInt()) % size);
@@ -63,35 +92,67 @@ public class TestTicketReservationClient {
 			
 			clientRequest = command + " " + name + ((num == null) ? (""): (" " + num.toString()));
 			
+			try {
+				Thread.sleep(Math.abs(rand.nextLong()) % 300);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
 			if (udpClient) {
 				DatagramChannel clientChannel;
 				try {
 					clientChannel = DatagramChannel.open();
-					InetAddress ia = InetAddress.getByName("192.168.1.5");
+					InetAddress ia = InetAddress.getByName("192.168.0.14");
 					byte[] request = clientRequest.getBytes();
 					byte[] response = new byte[1024];
 					ByteBuffer requestBuffer = ByteBuffer.wrap(request);
 					clientChannel.send(requestBuffer, new InetSocketAddress(ia, 8080));
 					clientChannel.receive(ByteBuffer.wrap(response));
+					serverResponse = new String(response);
 					clientChannel.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			} else {
 				try {
-					InetAddress ia = InetAddress.getByName("192.168.1.5");
+					InetAddress ia = InetAddress.getByName("192.168.0.14");
 					SocketChannel sc = SocketChannel.open(new InetSocketAddress(ia, 8080));
 					byte[] request = clientRequest.getBytes();
 					byte[] response = new byte[1024];
 					ByteBuffer requestBuffer = ByteBuffer.wrap(request);
 					sc.write(requestBuffer);
 					sc.read(ByteBuffer.wrap(response));
+					serverResponse = new String(response);
+					sc.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
+
+			try {
+				semaphore.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			seat = seatMap.get(name);
+			semaphore.release();
+			
+			if (command.equals("reserve")) {
+				result = true;				
+			} else if (command.equals("bookSeat")) {
+				result = true;
+			} else if (command.equals("search")) {
+				if (!serverResponse.contains("No reservations found for ")) {
+					result = true;
+				} else {
+					result = true;
+				}
+			} else {
+				result = true;
+			}
+			
+			return result;
 		}
-		
 	}
 
 	@Test 
@@ -250,5 +311,4 @@ public class TestTicketReservationClient {
 		TicketReservationClient ticket3 = new TicketReservationClient("delete name 5");
 		assertTrue(ticket3.checkUserInput() == false);
 	}
-
 }
